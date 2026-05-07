@@ -50,12 +50,12 @@
     background: radial-gradient(ellipse at 70% 40%, rgba(106,191,75,0.15) 0%, transparent 60%);
   }
   .hero-badge { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); color: #fff; border-radius: 50px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-size: 0.82rem; font-weight: 600; margin-bottom: 1.5rem; }
-  .hero h1 { font-size: 3.6rem; font-weight: 800; color: #fff; line-height: 1.1; }
+  .hero h1 { font-size: clamp(1.75rem, 9vw, 3.6rem); font-weight: 800; color: #fff; line-height: 1.1; overflow-wrap: break-word; }
   .hero h1 span { color: var(--green); }
-  .hero p { color: rgba(255,255,255,0.8); font-size: 1.05rem; line-height: 1.7; max-width: 540px; }
+  .hero p { color: rgba(255,255,255,0.8); font-size: clamp(0.9rem, 3.5vw, 1.05rem); line-height: 1.7; max-width: 540px; }
   .hero-stats { margin-top: 2.5rem; }
   .hero-stat { color: #fff; }
-  .hero-stat .number { font-size: 2.5rem; font-weight: 800; display: block; }
+  .hero-stat .number { font-size: clamp(1.5rem, 5.5vw, 2.5rem); font-weight: 800; display: block; }
   .hero-stat .label { font-size: 0.82rem; color: rgba(255,255,255,0.65); font-weight: 500; }
   .btn-hero-primary { background: var(--green); border: none; color: #fff; font-weight: 700; border-radius: 8px; padding: 0.75rem 1.5rem; font-size: 0.95rem; }
   .btn-hero-primary:hover { background: var(--green-dark); color: #fff; }
@@ -207,7 +207,7 @@
     font-size: 0.78rem; font-weight: 700; margin-bottom: 0.9rem;
     backdrop-filter: blur(4px);
   }
-  .pillar-photo-hero h1 { font-size: 2.8rem; font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.1; }
+  .pillar-photo-hero h1 { font-size: clamp(1.5rem, 6.5vw, 2.8rem); font-weight: 800; color: #fff; margin-bottom: 0.4rem; line-height: 1.1; overflow-wrap: break-word; }
   .pillar-photo-hero .sub { color: rgba(255,255,255,0.75); font-size: 1rem; }
   .pillar-icon-lg { width: 60px; height: 60px; border-radius: 14px; background: rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1.2rem; }
 
@@ -387,6 +387,14 @@
   @media (max-width: 768px) {
     .action-header { grid-template-columns: 1fr; }
     .action-header .ah-image { height: 160px; order: -1; }
+  }
+  @media (max-width: 576px) {
+    .hero { min-height: 100svh; padding: 2rem 0; }
+    .hero-stats { margin-top: 1.5rem; gap: 1rem !important; }
+    .hero-stat .number { line-height: 1; }
+    .btn-hero-primary, .btn-hero-outline { padding: 0.6rem 1.1rem; font-size: 0.88rem; }
+    .pillar-photo-hero { min-height: 220px; }
+    .pillar-photo-hero .hero-inner { padding-bottom: 1.2rem; }
   }
 
   /* NAV PREV/NEXT */
