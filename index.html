@@ -500,12 +500,69 @@
 .section-photo-header .eyebrow{display:inline-block; text-transform:uppercase; letter-spacing:.08em; font-size:.78rem; opacity:.85; margin-bottom:.35rem;}
 .section-photo-header h2,.section-photo-header h3,.section-photo-header p{color:#fff !important; margin-left:0;}
 html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-color:rgba(255,255,255,.08);}
+
+  /* ===== PASSWORD GATE ===== */
+  #pw-gate {
+    position: fixed; inset: 0; z-index: 999999;
+    background: linear-gradient(135deg, #0c1929 0%, #1e3a5f 55%, #0e3028 100%);
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  #pw-gate.pw-hidden { display: none; }
+  .pw-card {
+    background: rgba(255,255,255,0.07); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.13); border-radius: 20px;
+    padding: 2.5rem 2rem; width: 100%; max-width: 380px; text-align: center; color: #fff;
+  }
+  .pw-logo { width: 60px; height: 60px; background: rgba(30,58,95,0.8); border: 1px solid rgba(255,255,255,0.15); border-radius: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.6rem; margin-bottom: 1.2rem; }
+  .pw-title { font-size: 1.35rem; font-weight: 800; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
+  .pw-sub { font-size: 0.83rem; color: rgba(255,255,255,0.5); margin-bottom: 1.8rem; line-height: 1.5; }
+  .pw-input-wrap { position: relative; margin-bottom: 0.8rem; }
+  .pw-input {
+    width: 100%; background: rgba(255,255,255,0.09); border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px; color: #fff; padding: 0.78rem 2.8rem 0.78rem 1rem;
+    font-size: 1rem; font-family: 'Manrope', sans-serif; outline: none;
+    transition: border-color 0.2s, background 0.2s; box-sizing: border-box;
+  }
+  .pw-input:focus { border-color: #6abf4b; background: rgba(255,255,255,0.13); }
+  .pw-input::placeholder { color: rgba(255,255,255,0.32); }
+  .pw-input.pw-shake { animation: pwShake 0.38s ease; }
+  @keyframes pwShake {
+    0%,100%{transform:translateX(0)} 20%{transform:translateX(-7px)} 40%{transform:translateX(7px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)}
+  }
+  .pw-eye-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.45); cursor: pointer; font-size: 1rem; padding: 4px 6px; line-height: 1; }
+  .pw-eye-btn:hover { color: rgba(255,255,255,0.8); }
+  .pw-submit { width: 100%; background: #6abf4b; border: none; color: #fff; font-weight: 700; font-size: 0.97rem; padding: 0.78rem; border-radius: 10px; cursor: pointer; font-family: 'Manrope', sans-serif; transition: background 0.18s, transform 0.1s; }
+  .pw-submit:hover { background: #4e9b34; }
+  .pw-submit:active { transform: scale(0.98); }
+  .pw-error { color: #f87171; font-size: 0.8rem; margin-top: 0.6rem; min-height: 1.1em; transition: opacity 0.2s; }
+  .pw-footer-note { font-size: 0.7rem; color: rgba(255,255,255,0.2); margin-top: 1.8rem; }
 </style>
 
 </head>
 <body>
 
 <!-- NAVBAR -->
+<!-- ===== PASSWORD GATE ===== -->
+<!-- Wachtwoord wijzigen: pas de string in _PW aan (regel hieronder) -->
+<div id="pw-gate">
+  <div class="pw-card">
+    <div class="pw-logo"><i class="bi bi-lightning-fill" style="color:#6abf4b"></i></div>
+    <div class="pw-title">Energietransitie Toolbox</div>
+    <div class="pw-sub">Geef het wachtwoord in om toegang te krijgen tot de toolbox.</div>
+    <div class="pw-input-wrap">
+      <input type="password" id="pw-input" class="pw-input" placeholder="Wachtwoord…"
+             autocomplete="current-password" onkeydown="if(event.key==='Enter')pwCheck()">
+      <button class="pw-eye-btn" onclick="pwToggleVis()" tabindex="-1" aria-label="Toon/verberg wachtwoord">
+        <i class="bi bi-eye" id="pw-eye-icon"></i>
+      </button>
+    </div>
+    <button class="pw-submit" onclick="pwCheck()">Toegang krijgen →</button>
+    <div class="pw-error" id="pw-error"></div>
+    <div class="pw-footer-note">SANDBOX · Energietransitie Toolbox · Vlaamse bedrijven</div>
+  </div>
+</div>
+
 <nav class="navbar navbar-expand-lg sticky-top">
   <div class="container-xl">
     <a class="navbar-brand d-flex align-items-center" href="#" onclick="showPage('home')">
@@ -3136,6 +3193,51 @@ function resetDiagnose() {
   updateProgress();
   document.querySelector('.container-xl.py-4').scrollIntoView({behavior:'smooth'});
 }
+
+/* ===== PASSWORD GATE ===== */
+const _PW_HASH = '8b1afc04ff58781cc7e0c38e771489dc1f9de535e3acb3f901075c823f69d093';
+const _PW_KEY  = 'et_pw_v1';
+
+async function _sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function pwCheck() {
+  const inp = document.getElementById('pw-input');
+  const err = document.getElementById('pw-error');
+  const val = inp.value;
+  if (!val) { err.textContent = 'Voer een wachtwoord in.'; return; }
+  const hash = await _sha256(val);
+  if (hash === _PW_HASH) {
+    sessionStorage.setItem(_PW_KEY, _PW_HASH);
+    document.getElementById('pw-gate').classList.add('pw-hidden');
+    err.textContent = '';
+  } else {
+    err.textContent = 'Ongeldig wachtwoord — probeer opnieuw.';
+    inp.value = '';
+    inp.classList.add('pw-shake');
+    inp.addEventListener('animationend', () => inp.classList.remove('pw-shake'), { once: true });
+    inp.focus();
+  }
+}
+
+function pwToggleVis() {
+  const inp = document.getElementById('pw-input');
+  const icon = document.getElementById('pw-eye-icon');
+  const show = inp.type === 'password';
+  inp.type = show ? 'text' : 'password';
+  icon.className = show ? 'bi bi-eye-slash' : 'bi bi-eye';
+}
+
+(async () => {
+  const stored = sessionStorage.getItem(_PW_KEY);
+  if (stored === _PW_HASH) {
+    document.getElementById('pw-gate').classList.add('pw-hidden');
+  } else {
+    document.getElementById('pw-input').focus();
+  }
+})();
 
 /* ===== SEARCH ===== */
 let _searchIndex = null;
