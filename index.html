@@ -150,6 +150,34 @@
   footer .footer-link-green { color: var(--green); }
   footer .divider { border-color: rgba(255,255,255,0.1); margin: 2rem 0 1rem; }
   footer .copy { font-size: 0.8rem; color: rgba(255,255,255,0.4); text-align: center; }
+  footer .ai-disclaimer { font-size: 0.78rem; color: rgba(255,255,255,0.38); text-align: center; margin-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 0.7rem; }
+  footer .ai-disclaimer i { color: rgba(255,255,255,0.5); }
+
+  /* SEARCH */
+  .btn-search-nav { background: none; border: 1px solid #e5e7eb; color: #374151; border-radius: 8px; padding: 0.35rem 0.75rem; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.15s; font-family: 'Manrope', sans-serif; font-weight: 500; margin-left: 0.5rem; }
+  .btn-search-nav:hover { background: #f3f4f6; border-color: #d1d5db; }
+  .btn-search-nav .kbd { font-size: 0.7rem; background: #f3f4f6; border: 1px solid #d1d5db; border-radius: 4px; padding: 0 4px; color: #6b7280; font-family: monospace; }
+  .search-overlay { position: fixed; inset: 0; background: rgba(15,20,35,0.65); z-index: 9999; display: flex; align-items: flex-start; justify-content: center; padding: 72px 16px 16px; opacity: 0; pointer-events: none; transition: opacity 0.18s; }
+  .search-overlay.open { opacity: 1; pointer-events: all; }
+  .search-box { background: #fff; border-radius: 16px; width: 100%; max-width: 680px; box-shadow: 0 24px 72px rgba(0,0,0,0.35); overflow: hidden; }
+  .search-input-wrap { display: flex; align-items: center; padding: 14px 18px; border-bottom: 1px solid #e5e7eb; gap: 10px; }
+  .search-icon-inp { color: #9ca3af; font-size: 1.1rem; flex-shrink: 0; }
+  .search-input { flex: 1; border: none; outline: none; font-size: 1.05rem; font-family: 'Manrope', sans-serif; color: #1a1a2e; }
+  .search-input::placeholder { color: #9ca3af; }
+  .search-close-btn { background: none; border: 1px solid #e5e7eb; color: #6b7280; border-radius: 6px; padding: 4px 10px; cursor: pointer; font-size: 0.85rem; flex-shrink: 0; }
+  .search-close-btn:hover { background: #f3f4f6; }
+  .search-results { max-height: 460px; overflow-y: auto; }
+  .search-result-item { display: flex; gap: 12px; align-items: flex-start; padding: 13px 18px; cursor: pointer; border-bottom: 1px solid #f3f4f6; transition: background 0.12s; text-decoration: none; }
+  .search-result-item:hover { background: #f8faff; }
+  .search-result-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff; flex-shrink: 0; font-size: 0.95rem; margin-top: 2px; }
+  .search-result-title { font-weight: 700; font-size: 0.93rem; color: #1a1a2e; line-height: 1.3; }
+  .search-result-sub { font-size: 0.8rem; color: #6b7280; margin-top: 3px; line-height: 1.4; }
+  .search-result-tag { font-size: 0.72rem; color: #fff; border-radius: 4px; padding: 1px 7px; font-weight: 700; display: inline-block; margin-top: 5px; }
+  .search-hint { padding: 36px 20px; text-align: center; color: #9ca3af; font-size: 0.88rem; }
+  .search-hint i { font-size: 1.8rem; display: block; margin-bottom: 8px; opacity: 0.5; }
+  .search-empty { padding: 40px 20px; text-align: center; color: #9ca3af; }
+  .search-empty i { font-size: 2rem; display: block; margin-bottom: 8px; opacity: 0.4; }
+  .search-count { padding: 7px 18px; font-size: 0.76rem; color: #9ca3af; background: #f9fafb; border-bottom: 1px solid #f3f4f6; }
 
   /* PILLAR DETAIL PAGES */
   .pillar-hero { padding: 60px 0 40px; }
@@ -488,10 +516,25 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <li class="nav-item"><a class="nav-link" href="#" data-page="p4" onclick="showPage('p4')">Flexmarkten</a></li>
         <li class="nav-item"><a class="nav-link" href="#" data-page="p5" onclick="showPage('p5')">Data &amp; Regie</a></li>
         <li class="nav-item ms-2"><a class="nav-link btn-diagnose px-3" href="#" data-page="diagnose" onclick="showPage('diagnose')">Diagnose Tool</a></li>
+        <li class="nav-item"><button class="btn-search-nav" onclick="toggleSearch()" title="Zoeken (Ctrl+K)"><i class="bi bi-search"></i> Zoeken <span class="kbd d-none d-lg-inline">Ctrl K</span></button></li>
       </ul>
     </div>
   </div>
 </nav>
+
+<!-- ===== SEARCH OVERLAY ===== -->
+<div id="search-overlay" class="search-overlay" onclick="handleSearchOverlayClick(event)">
+  <div class="search-box" id="search-box">
+    <div class="search-input-wrap">
+      <i class="bi bi-search search-icon-inp"></i>
+      <input type="text" id="search-input" class="search-input" placeholder="Zoek naar stappen, begrippen, pijlers…" oninput="doSearch(this.value)" autocomplete="off" spellcheck="false">
+      <button class="search-close-btn" onclick="closeSearch()"><i class="bi bi-x-lg"></i> Sluiten</button>
+    </div>
+    <div id="search-results">
+      <div class="search-hint"><i class="bi bi-search"></i>Typ een trefwoord — bijv. "batterij", "EMS", "subsidie", "Fluvius"</div>
+    </div>
+  </div>
+</div>
 
 <!-- =================== HOME =================== -->
 <div id="page-home" class="page active">
@@ -717,6 +760,7 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
       </div>
       <hr class="divider">
       <p class="copy">SANDBOX Energietransitie Toolbox — Sensibilisering inzake netcongestie voor bedrijven</p>
+      <p class="ai-disclaimer"><i class="bi bi-robot me-1"></i> De inhoud van deze toolbox is deels gegenereerd met behulp van AI op basis van gevalideerde bronnen (Fluvius, Elia, VEKA, VLAIO e.a.). Ondanks zorgvuldige opmaak kunnen er onnauwkeurigheden of fouten in voorkomen. Raadpleeg steeds de officiële bronnen voor bindende informatie.</p>
     </div>
   </footer>
 </div>
@@ -804,7 +848,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Verzamel uw verbruiksdata (15-min waarden) van het laatste jaar via Mijn Fluvius of uw leverancier</li><li>Maak een heatmap van uw verbruik per uur en per maand</li><li>Identificeer uw top-5 grootste verbruikers (machines, koeling, verwarming)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Zonder zicht op uw huidig verbruik kunt u geen toekomst plannen. Een goede analyse legt direct ook quick wins bloot in energie-efficiëntie.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://mijn.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Mijn Fluvius — verbruiksdata</span></a><a href="https://www.energiesparen.be/bedrijven/energiescan" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA energiescan voor bedrijven</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://mijn.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Mijn Fluvius — verbruiksdata</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — capaciteitsplanning</span></a><a href="https://www.energiesparen.be/bedrijven/energiescan" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA energiescan voor bedrijven</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend energieauditeur</strong> — via VEKA erkende auditeurs voor professionele verbruiksanalyse</li><li><strong>Fluvius klantenservice</strong> — voor toegang tot uw kwartierverbruiksdata via het digitale platform</li><li><strong>VEKA energieconsulent</strong> — gratis adviesgesprek voor Vlaamse bedrijven via energiesparen.be</li></ul>
       </div>
     </div>
   </div>
@@ -828,7 +874,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Inventariseer geplande elektrificatie: warmtepompen, e-boilers, IR-droging, EV-laadinfra</li><li>Schat per project de extra vermogensvraag (kW) en jaarverbruik (kWh) in</li><li>Map elke trigger op een tijdlijn — kwartaal en jaar van ingebruikname</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Elektrificatie verloopt sneller dan veel bedrijven inschatten. Door triggers vroeg op de tijdlijn te zetten, vermijdt u dat investeringen botsen met aansluitcapaciteit.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Routekaart elektrificatie industrie (VEKA)</span></a><a href="https://klimaat.vlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Klimaatplan Vlaanderen 2030</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Routekaart elektrificatie industrie (VEKA)</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — groene energie &amp; WKK</span></a><a href="https://klimaat.vlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Klimaatplan Vlaanderen 2030</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend energieauditeur</strong> — voor een professionele inschatting van de energie-impact per elektrificatieproject</li><li><strong>Technisch adviseur sectorfederatie</strong> — Agoria, Essenscia of Voka bieden sectorspecifieke elektrificatiegidsen</li><li><strong>VEKA energie-expert</strong> — via energiesparen.be voor trajectbegeleiding elektrificatie KMO's</li></ul>
       </div>
     </div>
   </div>
@@ -852,7 +900,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Bouw drie scenario's met verschillende elektrificatiesnelheid en bedrijfsgroei</li><li>Combineer per scenario uw huidig verbruik met de impact van elke trigger</li><li>Visualiseer de evolutie van vermogen (kW) en jaarverbruik (kWh) op 5, 10 en 15 jaar</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Eén puntvoorspelling is altijd fout. Drie scenario's geven u een realistische bandbreedte en helpen bij de communicatie naar netbeheerder en management.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Scenarioplanning (Agoria handleiding)</span></a><a href="https://www.energyville.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EnergyVille — toekomstscenario's België</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Scenarioplanning (Agoria handleiding)</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — toekomstscenario's energie</span></a><a href="https://www.energyville.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EnergyVille — toekomstscenario's België</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Onafhankelijk energieconsultant</strong> — voor het opstellen en doorrekenen van meerdere groeiscenario's</li><li><strong>EnergyVille / VITO</strong> — wetenschappelijke ondersteuning bij langetermijn-energiescenario's</li><li><strong>Fluvius projectbegeleider</strong> — vroegtijdig overleg over scenario's voor de netplanning</li></ul>
       </div>
     </div>
   </div>
@@ -876,7 +926,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Bepaal per scenario de gelijktijdige maximale vermogensvraag (gelijktijdigheidsfactor)</li><li>Houd rekening met seizoenseffecten en uitzonderlijke piekomstandigheden</li><li>Vergelijk de prognose met uw contractueel beschikbaar vermogen (kVA)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Piekvermogen bepaalt uw aansluitingskosten en bepaalt of een verzwaring nodig is. Vroeg inzicht hierin maakt het verschil tussen wel en niet aansluiten.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.synergrid.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Synergrid — aansluitvoorwaarden</span></a><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — capaciteitstarief</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.synergrid.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Synergrid — aansluitvoorwaarden</span></a><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — capaciteitstarief</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — piekvermogen inzicht</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend elektrotechnisch ingenieur</strong> — voor een nauwkeurige piekberekening inclusief gelijktijdigheidsfactor</li><li><strong>Fluvius Energiegrip</strong> — gratis tool voor inzicht in capaciteit en verbruik op uw aansluiting</li><li><strong>Uw erkend installateur</strong> — kan helpen bij opmeting van uw bestaande installaties</li></ul>
       </div>
     </div>
   </div>
@@ -901,6 +953,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Energie is een C-level onderwerp geworden. Wie het laat bij facility, mist strategische kansen rond financiering, subsidies en investeringsbeslissingen.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.iso.org/iso-50001-energy-management.html" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>ISO 50001 — Energiemanagementsysteem</span></a><a href="https://www.voka.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Voka — energietransitie voor bedrijven</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Energiecoach VEKA / VLAIO</strong> — begeleiding bij het opstellen van een energie-roadmap voor uw bedrijf</li><li><strong>Voka energie-expert</strong> — strategisch advies en netwerking rond energietransitie in Vlaanderen</li><li><strong>Erkend energiedeskundige</strong> — voor validatie en onderbouwing van uw plan richting management en financiers</li></ul>
       </div>
     </div>
   </div>
@@ -944,6 +998,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een investeringsplan zonder energie-bril leidt tot verrassingen achteraf. Een investering van vandaag bepaalt uw energieprofiel voor 15 tot 25 jaar.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vlaio.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO — investeringssteun voor bedrijven</span></a><a href="https://www.vlaio.be/nl/subsidies-financiering/strategische-ecologiesteun-stres" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Strategische Ecologiesteun (STRES)</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>VLAIO innovatieadviseur</strong> — gratis advies over investeringssteun en subsidies voor energieprojecten</li><li><strong>Erkend energieauditeur</strong> — voor een onafhankelijke energie-impact analyse van uw CAPEX-plan</li><li><strong>Uw accountant of CFO</strong> — voor integratie van energie-impact in de investeringsplanning</li></ul>
       </div>
     </div>
   </div>
@@ -967,7 +1023,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Bereken per project: Δ vermogen (kW), Δ jaarverbruik (kWh), Δ piekuren</li><li>Vertaal naar financiële impact: aansluiting, energiekost, CO₂-kost</li><li>Hou rekening met het tijdsprofiel — wanneer op de dag verbruikt het?</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Cijfers maken keuzes objectief. Met een kwantitatieve impact-analyse vermijdt u dat gevoelsargumenten een investering goedkeuren of afwijzen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Energy Calculator (VEKA)</span></a><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Total Cost of Ownership leidraad</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Energy Calculator (VEKA)</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — energiekosten referentiewaarden</span></a><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Total Cost of Ownership leidraad</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>VEKA energiescan</strong> — gratis doorlichting van uw energiefactuur en kosten-baten per project</li><li><strong>Financieel adviseur of investment controller</strong> — voor een betrouwbare TCO-berekening</li><li><strong>VLAIO subsidiedatabank</strong> — check welke steun de businesscase verbetert</li></ul>
       </div>
     </div>
   </div>
@@ -991,7 +1049,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Plan elektrificatie-projecten gespreid over jaren ipv allemaal samen</li><li>Combineer een vermogenshongerig project met een efficiëntiemaatregel ervoor</li><li>Stem grote projecten af op aansluitingsuitbreiding bij netbeheerder</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Door fasering vermijdt u kostbare overdimensionering en geeft u uzelf én de netbeheerder ademruimte. Dat versnelt uiteindelijk uw transitie.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — investeringsplan en fasering</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — investeringsplan en fasering</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — plan uw capaciteitsgroei</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius projectbegeleider</strong> — voor afstemming van uw uitrolplanning met de netplanning</li><li><strong>Erkend installateur</strong> — voor realistische tijdslijnen bij de technische uitvoering per fase</li><li><strong>Onafhankelijk energieconsultant</strong> — voor een geïntegreerd faseringsdocument richting management en Fluvius</li></ul>
       </div>
     </div>
   </div>
@@ -1016,6 +1076,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Soms is een batterij of warmtebuffer goedkoper dan een aansluitingsverzwaring. Wie niet vergelijkt, betaalt te veel.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.cleantechvlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Cleantech Vlaanderen</span></a><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Agoria — Industrie 4.0 en Energie</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Cleantech Vlaanderen</strong> — overzicht van innovatieve technologieleveranciers en pilootprojecten</li><li><strong>EnergyVille / VITO</strong> — onafhankelijk technologisch advies over alternatieve energietechnologieën</li><li><strong>Onafhankelijk technisch consultant</strong> — voor een objectieve vergelijking van oplossingen op maat van uw site</li></ul>
       </div>
     </div>
   </div>
@@ -1114,7 +1176,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Vertaal uw scenario's uit Pijler 1 naar concrete kVA-behoeften per jaar</li><li>Voeg veiligheidsmarges toe voor onverwachte opportuniteiten</li><li>Documenteer hoe u tot deze cijfers gekomen bent</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een onderbouwde vraag wordt sneller én correcter behandeld. Vage aanvragen zorgen voor heen-en-weer, met vertraging als gevolg.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — vermogensaanvraag bedrijven</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — vermogensaanvraag bedrijven</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — vermogensinzicht</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius aansluiting &amp; toegang</strong> — rechtstreeks loket voor vermogensaanvragen en technische vragen</li><li><strong>Erkend elektrotechnisch ingenieur</strong> — voor correcte kVA-berekening en opmeting van uw installatie</li><li><strong>Uw erkend installateur</strong> — voor de vertaling van uw behoeften naar een technisch aansluitplan</li></ul>
       </div>
     </div>
   </div>
@@ -1138,7 +1202,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Stel een dossier op met uw bedrijfscontext, scenario's en tijdlijn</li><li>Voeg uw geplande investeringen en hun energie-impact toe</li><li>Maak duidelijk welke flexibiliteit u kunt aanbieden</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Netbeheerders waarderen onderbouwde aanvragen. Een goed dossier verhoogt de kans op een sneller én flexibeler antwoord.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EnergieGRIP — sectorale aanpak</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — sectorale aanpak</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Onafhankelijk energieconsultant</strong> — voor het opstellen van een professioneel aanvraagdossier met scenario's en fasering</li><li><strong>Erkend installateur of ingenieur</strong> — voor technische onderbouwing van uw flexibiliteitsaanbod</li><li><strong>Fluvius EnergieGRIP-team</strong> — voor sectorale begeleiding bij complexe aanvragen</li></ul>
       </div>
     </div>
   </div>
@@ -1162,7 +1228,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Vraag een ontmoeting aan met de netbeheerder via uw account manager of KMO-loket</li><li>Bespreek niet enkel uw vraag, maar ook de netuitdagingen in uw regio</li><li>Verken samen flexibele oplossingen die voor beide partijen werken</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een goed gesprek maakt vaak meer mogelijk dan een formulier. Netbeheerders zoeken zelf actief naar pragmatische oplossingen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/onderneming" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — contact bedrijven</span></a><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — klantenrelaties</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/onderneming" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — contact bedrijven</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — wat is netcongestie?</span></a><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — klantenrelaties</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius accountmanager bedrijven</strong> — uw vaste aanspreekpunt voor proactief overleg over netcapaciteit</li><li><strong>Elia klantenteam</strong> — voor bedrijven op het hoogspanningsnet (&gt;70kV)</li><li><strong>Sectorverenigingen (Voka, Agoria)</strong> — voor lobbywerk en collectieve aanpak in congestiezones</li></ul>
       </div>
     </div>
   </div>
@@ -1186,7 +1254,9 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Plan kwartaalupdates met uw netbeheerder over de status van uw dossier</li><li>Communiceer wijzigingen in uw plannen meteen</li><li>Hou interne stakeholders op de hoogte van milestones</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Aanvragen die maandenlang blijven liggen verliezen prioriteit. Actieve opvolging hou ze hoog op de agenda van iedereen.</p>
-        
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — opvolgingstool</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius projectbegeleider</strong> — voor statusopvolging van uw aanvraag en mijlpaalcommunicatie</li><li><strong>Intern energy manager</strong> — voor coördinatie tussen operations, finance en de netbeheerder</li><li><strong>Onafhankelijk energieconsultant</strong> — als bemiddelaar bij complexe of lang slepende dossiers</li></ul>
       </div>
     </div>
   </div>
@@ -1229,7 +1299,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Vraag het netinformatiedocument op bij Fluvius of Elia</li><li>Check de status van het lokale net: capaciteit, congestiekans, geplande versterkingen</li><li>Documenteer uw huidige aansluitingscontract: vermogen, type, looptijd</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Niet elke regio heeft dezelfde mogelijkheden. Wat in Limburg vlot kan, kan in de Antwerpse haven jaren wachten.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/thema/capaciteitskaart" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius capaciteitskaart</span></a><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia federaal net</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/thema/capaciteitskaart" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius capaciteitskaart</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — wat is netcongestie in Vlaanderen?</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — netbelasting live</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius capaciteitsloket</strong> — voor een officieel netinformatiedocument voor uw aansluiting</li><li><strong>Elia klantenteam</strong> — voor situaties op het transmissienet</li><li><strong>Onafhankelijk netconsultant</strong> — voor interpretatie van de capaciteitskaart en congestierisico's in uw regio</li></ul>
       </div>
     </div>
   </div>
@@ -1254,7 +1326,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Gebruik dit voor processen met strikte continuïteitseisen</li><li>Bereken de jaarlijkse netkost vs. opbrengstpotentieel</li><li>Hou rekening met doorlooptijden van 12 tot 36 maanden voor verzwaring</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>De klassieke route geeft maximale zekerheid maar kost de meeste tijd én geld bij een vermogensuitbreiding.</p>
-        
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — aanvraag vaste capaciteit</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius aansluiting &amp; toegang</strong> — voor de officiële aanvraagprocedure en doorlooptijden</li><li><strong>Erkend installateur</strong> — voor de technische realisatie van de aansluiting en interne installatie</li><li><strong>Juridisch adviseur</strong> — voor beoordeling van de aansluitingsovereenkomst en aansprakelijkheden</li></ul>
       </div>
     </div>
   </div>
@@ -1279,7 +1353,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Onderzoek of een flexibele aansluiting mogelijk is in uw regio</li><li>Beoordeel of uw processen tijdelijke capaciteitsbeperkingen aankunnen</li><li>Onderhandel duidelijke afspraken: aantal beperkingsuren, voorspelbaarheid, vergoeding</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een flexibele aansluiting opent de deur waar de klassieke route gesloten is. Voor veel bedrijven is dat het verschil tussen wel en niet groeien.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — flexibele aansluiting</span></a><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — netwerktarieven</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — flexibele aansluiting</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — netcongestie en flexoplossingen</span></a><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — netwerktarieven</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius EnergieGRIP-team</strong> — voor informatie over flexibele aansluitingscontracten in uw regio</li><li><strong>EMS-leverancier</strong> — voor automatische sturing zodat beperkingen operationeel geen impact hebben</li><li><strong>Erkend installateur</strong> — voor technische aanpassing van uw installatie aan de flex-eisen</li></ul>
       </div>
     </div>
   </div>
@@ -1304,7 +1380,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Combineer een kleinere aansluiting met lokale batterijopslag</li><li>Voeg een Energy Management System (EMS) toe voor automatische sturing</li><li>Reken de totale TCO door inclusief subsidies en flexmarktopbrengsten</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>De optimale aansluiting is zelden alleen maar groter. Slim combineren levert vaak een lagere kost én een betere positie op de flexmarkt.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vlaio.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO — Energie-investeringssteun</span></a><a href="https://www.cleantechvlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Cleantech Vlaanderen — opslag</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vlaio.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO — Energie-investeringssteun</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — hybride strategie</span></a><a href="https://www.cleantechvlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Cleantech Vlaanderen — opslag</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Onafhankelijk energieconsultant</strong> — voor TCO-vergelijking van hybride opties versus klassieke verzwaring</li><li><strong>EMS-leverancier</strong> — voor de geïntegreerde sturing van aansluiting, batterij en productie</li><li><strong>VLAIO innovatieadviseur</strong> — voor subsidies op de batterij- en opslagcomponent</li></ul>
       </div>
     </div>
   </div>
@@ -1400,7 +1478,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Plot uw verbruik per kwartier voor een typische week en weekend</li><li>Identificeer uw top-3 piekuren en de installaties die er verantwoordelijk voor zijn</li><li>Bereken uw load factor (gemiddeld verbruik / piekverbruik)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Pas als u uw piek kent, weet u waar geld te halen valt. Een lage load factor betekent dat er veel ruimte is voor optimalisatie.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://mijn.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — verbruiksprofiel via Mijn Fluvius</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://mijn.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — verbruiksprofiel via Mijn Fluvius</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — kwartierdata analyse</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius via Mijn Fluvius</strong> — download uw kwartierdata gratis en start uw eigen analyse</li><li><strong>Erkend energieauditeur</strong> — voor professionele interpretatie van uw verbruiksprofiel en load factor</li><li><strong>VEKA energieconsulent</strong> — voor begeleiding bij het detecteren van efficiëntiekansen</li></ul>
       </div>
     </div>
   </div>
@@ -1424,7 +1504,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Plaats sub-meters bij uw grootste verbruikers en flexibele assets</li><li>Bouw een real-time dashboard met live verbruik en kosten</li><li>Stel alerts in voor afwijkende patronen en piekoverschrijdingen</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Real-time inzicht is de fundering van slimme sturing. Zonder data is automatisering onmogelijk en zijn besparingen toevallig.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — energieboekhouding</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — energieboekhouding</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — monitoringstandaarden</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend installatietechnicus</strong> — voor plaatsing van sub-meters en communicatie-infrastructuur</li><li><strong>EMS-leverancier</strong> — voor koppeling van meetdata aan een live dashboard en sturingssysteem</li><li><strong>VEKA energieconsulent</strong> — voor begeleiding bij het opzetten van een energieboekhouding</li></ul>
       </div>
     </div>
   </div>
@@ -1448,7 +1530,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Lijst uw processen op die niet tijdkritisch zijn (koeling, opslag verwarmen, laden)</li><li>Bepaal per proces de mogelijke verschuiving (uren, dagen)</li><li>Test een eenvoudige verschuiving uit en meet de impact</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Tijdsverschuiving is gratis flexibiliteit. Veel bedrijven ontdekken dat ze 20-30% van hun verbruik probleemloos kunnen verschuiven.</p>
-        
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — flexibel verbruik industrie</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Process engineer / productiemanager</strong> — voor analyse van welke processen tijdsverschuiving verdragen zonder kwaliteitsverlies</li><li><strong>Erkend energieauditeur</strong> — voor kwantificering van het verschuifbaar potentieel in kWh en kW</li><li><strong>EMS-leverancier</strong> — voor automatisering van de verschuiving op basis van prijssignalen</li></ul>
       </div>
     </div>
   </div>
@@ -1472,7 +1556,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Vergelijk dynamische, vast en hybride contracten van leveranciers</li><li>Bereken een terugvalsimulatie op basis van uw verbruiksprofiel</li><li>Onderhandel ook de timing van afname (peak-shaving clausules)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Op uren met veel zonne-energie zijn elektriciteitsprijzen soms negatief. Wie zijn verbruik daar op afstemt, betaalt minder voor identiek werk.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — vergelijk leveranciers</span></a><a href="https://my.elexys.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elexys — day-ahead prijzen</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — vergelijk leveranciers</span></a><a href="https://my.elexys.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elexys — day-ahead prijzen</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — uurprijzen en marktdata</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Energieleverancier</strong> — voor advies over dynamische contracten en simulatie op uw verbruiksprofiel</li><li><strong>VREG vergelijkingstool</strong> — vergelijk leveranciers op tariefstructuur en dynamische opties</li><li><strong>Energiebroker</strong> — voor onafhankelijke begeleiding bij contractonderhandelingen</li></ul>
       </div>
     </div>
   </div>
@@ -1497,6 +1583,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Manuele sturing schaalt niet. Een EMS reageert op tarieven en signalen in seconden — en haalt zo waarde die menselijk handelen mist.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Agoria — digitale energiediensten</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>EMS-leverancier</strong> — voor selectie, installatie en configuratie van een Energy Management System</li><li><strong>Aggregator / BSP</strong> — voor koppeling van uw EMS aan balanceringsmarkten en automatische activatie</li><li><strong>Erkend installateur</strong> — voor de hardware-integratie van uw assets met het EMS</li></ul>
       </div>
     </div>
   </div>
@@ -1539,6 +1627,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Niet elke installatie is even bruikbaar als flex. Een goede inventaris voorkomt dat u investeert in flex die operationeel niet werkbaar is.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.synergrid.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Synergrid — flexibiliteitscatalogus</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend installateur of process engineer</strong> — voor een technische inventaris van stuurbare assets op uw site</li><li><strong>Aggregator / BSP</strong> — voor een snelle scan van welke assets commercieel inzetbaar zijn op flexmarkten</li><li><strong>Synergrid</strong> — voor technische specificaties en flexibiliteitscriteria per asset-type</li></ul>
       </div>
     </div>
   </div>
@@ -1563,6 +1653,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Opslag transformeert tijdelijke flexibiliteit in 24/7 inzetbare capaciteit. De businesscase verbetert sterk wanneer u meerdere opbrengsten stapelt.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vlaio.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO — opslagsteun</span></a><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Energiesparen — batterijen voor bedrijven</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>VLAIO innovatieadviseur</strong> — voor subsidies en ecologiepremies op batterij- en thermische opslaginstallaties</li><li><strong>Erkend installatietechnicus batterijopslag</strong> — voor dimensionering, veiligheidskeuring en integratie</li><li><strong>EnergyVille / VITO</strong> — voor onafhankelijk technisch advies over opslagtechnologie op industriële schaal</li></ul>
       </div>
     </div>
   </div>
@@ -1586,7 +1678,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Bereken per asset: maximaal flexvolume, ramp-up tijd, beschikbaarheidsuren</li><li>Bundel uw assets in een gecombineerd flex-portfolio</li><li>Documenteer welke flexsoorten u kunt leveren (FCR, aFRR, mFRR, lokale flex)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Marktwaarde van flexibiliteit hangt af van responstijd en betrouwbaarheid. Hoe sneller en stabieler uw flex, hoe hoger de vergoeding.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — balanceringsdiensten</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — balanceringsdiensten</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — responstijden en marktcriteria</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Aggregator / BSP</strong> — voor een snelle inschatting van de marktwaarde van uw flex-portfolio</li><li><strong>Elia technisch team</strong> — voor de officiële technische specificaties per flexproduct (FCR, aFRR, mFRR)</li><li><strong>Onafhankelijk energieconsultant</strong> — voor bundeling en optimalisatie van uw flex-portfolio</li></ul>
       </div>
     </div>
   </div>
@@ -1610,7 +1704,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Zorg voor de juiste meet- en stuurinfrastructuur (sub-15-min metering)</li><li>Sluit een raamcontract af met een aggregator of doe rechtstreekse prequalificatie</li><li>Test uw flex eerst in pilootmodus voor commerciële activatie</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Marktdeelname vereist meer dan technische flexibiliteit alleen. Contractueel en operationeel klaar zijn is wat de geldstroom op gang brengt.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — prequalificatie</span></a><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — overzicht aggregators</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — prequalificatie</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — marktparticipatie info</span></a><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — overzicht aggregators</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend aggregator / BSP</strong> — begeleidt u door de volledige prequalificatieprocedure bij Elia</li><li><strong>Elia prequalificatieteam</strong> — voor de officiële technische validatie van uw assets</li><li><strong>Erkend installateur</strong> — voor aanpassing van metering en sturinginfrastructuur aan marktcriteria</li></ul>
       </div>
     </div>
   </div>
@@ -1676,7 +1772,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Maak kennis met FCR, aFRR, mFRR en lokale flexmarkten (CRM)</li><li>Begrijp het verschil tussen capaciteits- en activatievergoeding</li><li>Volg een opleiding of webinar van Elia of FEBEG voor industrieel publiek</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Elke markt heeft eigen regels, prijzen en eisen. De juiste markt voor uw asset bepaalt het verschil tussen marginaal en aantrekkelijk verdienen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be/nl/elektriciteitsmarkt-en-systeem" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — flexibiliteitsmarkten</span></a><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — flexibility guide</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be/nl/elektriciteitsmarkt-en-systeem" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — flexibiliteitsmarkten</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — marktprijzen per product</span></a><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — flexibility guide</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Elia markt- en klantendienst</strong> — voor een overzicht van alle flexproducten en hun vereisten</li><li><strong>FEBEG leden-aggregators</strong> — voor een eerste inschatting van uw vergoedingspotentieel</li><li><strong>Erkend energieadviseur</strong> — voor begeleiding bij de keuze van het meest geschikte flexproduct voor uw assets</li></ul>
       </div>
     </div>
   </div>
@@ -1700,7 +1798,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Check de minimale biedgrootte en responstijd van uw doelmarkt</li><li>Installeer of verifieer geschikte meet- en sturingsinfrastructuur</li><li>Doorloop de prequalificatie- of validatieprocedure</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>De beste asset is waardeloos zonder marktconforme infrastructuur. Vooraf zorgen dat alles voldoet, vermijdt teleurstelling bij activatie.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — terms & conditions BSP</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — terms & conditions BSP</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — technische vereisten</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Elia prequalificatieteam</strong> — voor de officiële procedure en minimale biedgrootten per markt</li><li><strong>Erkend installateur</strong> — voor installatie van conforme meet- en sturingsinfrastructuur</li><li><strong>Aggregator / BSP</strong> — kan de volledige technische validatie namens u begeleiden</li></ul>
       </div>
     </div>
   </div>
@@ -1724,7 +1824,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Vergelijk verschillende aggregators op vergoedingsmodel en track record</li><li>Onderhandel duidelijke voorwaarden over activatiefrequentie en exclusiviteit</li><li>Hou een uitstapclausule open voor het geval u zelf marktpartij wordt</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Aggregators bundelen flex van meerdere bedrijven en hebben de specialisatie om optimaal te bieden. Voor de meeste bedrijven is dit de meest praktische route.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — lijst geregistreerde BSP's</span></a><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — geregistreerde marktpartijen</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — lijst geregistreerde BSP's</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — overzicht geregistreerde partijen</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>FEBEG ledenlijst</strong> — overzicht van erkende aggregators actief in België</li><li><strong>Elia BSP-register</strong> — voor verificatie van geregistreerde marktpartijen</li><li><strong>Onafhankelijk energieadviseur</strong> — voor objectieve vergelijking van aggregatorcontracten en vergoedingsmodellen</li></ul>
       </div>
     </div>
   </div>
@@ -1748,7 +1850,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Definieer interne procedures voor activatie tijdens kantooruren én buiten</li><li>Communiceer duidelijk met operations over verwachte activaties</li><li>Hou een logboek bij van elke activatie en evalueer impact</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Activatie is het moment van waarheid. Goede interne afstemming voorkomt dat productie en marktdeelname met elkaar in conflict komen.</p>
-        
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — activatiegeschiedenis en biedprijzen</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Aggregator / BSP</strong> — levert maandelijkse rapportages en optimaliseert de biedstrategie voor u</li><li><strong>Intern energy manager</strong> — voor coördinatie tussen marktdeelname en productieplanning</li><li><strong>Elia Grid Data platform</strong> — voor transparante opvolging van activaties, vergoedingen en marktprestaties</li></ul>
       </div>
     </div>
   </div>
@@ -1772,7 +1876,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Volg uw inkomsten op via de aggregator-rapportages</li><li>Combineer met netvergoedingen (capaciteitstarief reductie) en CO₂-besparing</li><li>Herinvesteer in uitbreiding van uw flexcapaciteit als de businesscase werkt</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Value stacking is de sleutel: één asset levert in idealiter 3-4 inkomstenstromen tegelijk. Zo wordt de payback ineens een stuk korter.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — netwerktarieven en capaciteitstarief</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — netwerktarieven en capaciteitstarief</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — balanceringsvergoedingen</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Aggregator / BSP</strong> — voor gecombineerde optimalisatie van balancering, capaciteitstarief en day-ahead handel</li><li><strong>VREG</strong> — voor inzicht in nettariefvoordelen van capaciteitsreductie</li><li><strong>Onafhankelijk energieadviseur</strong> — voor een volledige value stacking berekening op maat van uw portfolio</li></ul>
       </div>
     </div>
   </div>
@@ -1813,7 +1919,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Verken of er buren of bedrijven in de buurt zijn met een complementair profiel</li><li>Onderzoek de juridische vorm: peer-to-peer, energiegemeenschap, energy community</li><li>Bereken de meerwaarde via lokale verrekening van kWh's</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Lokaal delen verlaagt nettarieven en versterkt de regionale economie. De wetgeving in Vlaanderen erkent dit sinds 2022 expliciet.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be/energiedelen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — energiedelen en energiegemeenschappen</span></a><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — energiegemeenschappen</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be/energiedelen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — energiedelen en energiegemeenschappen</span></a><a href="https://www.vlaanderen.be/bouwen-wonen-en-energie/groene-energie/energiedelen-iets-voor-u" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Vlaanderen.be — energiedelen: iets voor u?</span></a><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — energiegemeenschappen</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>VEKA energiedelen-team</strong> — voor begeleiding bij opzet van een energiegemeenschap of peer-to-peer uitwisseling</li><li><strong>ODE Vlaanderen</strong> — voor informatie over lokale hernieuwbare energieprojecten en collectieve opwek</li><li><strong>Erkend installateur PV / wind</strong> — voor dimensionering en realisatie van uw lokale opwekinstallatie</li></ul>
       </div>
     </div>
   </div>
@@ -1837,7 +1945,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Beoordeel het potentieel van zonnedaken, kleinwind of WKK op uw site</li><li>Combineer eigen consumptie met injectie en groene certificaten</li><li>Verken samenwerking met een investeerder via een dak-huur model</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Eigen productie verlaagt uw blootstelling aan marktprijsschommelingen. Het versterkt ook uw onderhandelingspositie bij contracten.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — groenestroomcertificaten</span></a><a href="https://www.ode.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>ODE Vlaanderen — hernieuwbare energie</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — groenestroomcertificaten</span></a><a href="https://www.vlaanderen.be/bouwen-wonen-en-energie/groene-energie/energiedelen-iets-voor-u" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Vlaanderen.be — energiedelen op bedrijventerreinen</span></a><a href="https://www.ode.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>ODE Vlaanderen — hernieuwbare energie</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>VEKA</strong> — voor de aanvraag van groenestroomcertificaten en steunberekening</li><li><strong>Fluvius</strong> — voor aansluiting en meetinfrastructuur van uw energiegemeenschap</li><li><strong>VREG</strong> — voor regelgevende informatie over energiegemeenschappen en toegestane uitwisseling</li></ul>
       </div>
     </div>
   </div>
@@ -1862,6 +1972,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een PPA biedt lange-termijn prijszekerheid en groene energie. Voor energie-intensieve bedrijven is dit een steeds populairdere route.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.febeg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>FEBEG — PPA-overzicht België</span></a><a href="https://www.there100.org" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>RE100 — corporate renewable sourcing</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Gespecialiseerd energiejurist</strong> — PPA's zijn complexe langetermijncontracten die juridische begeleiding vereisen</li><li><strong>Energiebroker</strong> — voor marktverkenning en vergelijking van on-site, off-site en virtuele PPA-aanbieders</li><li><strong>FEBEG</strong> — voor een overzicht van erkende PPA-leveranciers actief in België</li></ul>
       </div>
     </div>
   </div>
@@ -1885,7 +1997,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Documenteer uw CO₂-besparingen volgens erkende methodologieën</li><li>Verken markten voor groene certificaten en CO₂-credits</li><li>Communiceer uw inspanningen richting klanten via CSRD-rapportering</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Onder CSRD en CBAM wordt CO₂-prestatie steeds zichtbaarder. Wat goed gedocumenteerd is, kan ook commercieel verzilverd worden.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://finance.ec.europa.eu/capital-markets-union-and-financial-markets/company-reporting-and-auditing/company-reporting/corporate-sustainability-reporting_en" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EU CSRD richtlijn</span></a><a href="https://klimaat.vlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Vlaams Klimaatplan</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://finance.ec.europa.eu/capital-markets-union-and-financial-markets/company-reporting-and-auditing/company-reporting/corporate-sustainability-reporting_en" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EU CSRD richtlijn</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — CO₂-reductiepotentieel industrie</span></a><a href="https://klimaat.vlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Vlaams Klimaatplan</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>CSRD-adviseur of accountant</strong> — voor correcte documentatie van CO₂-besparingen conform ESRS-rapportagestandaarden</li><li><strong>VEKA certificatenregister</strong> — voor aanvraag en opvolging van groenestroomcertificaten</li><li><strong>VLAIO</strong> — voor informatie over ecologiepremies gekoppeld aan CO₂-reductie-investeringen</li></ul>
       </div>
     </div>
   </div>
@@ -1951,7 +2065,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Activeer de digitale meter van Fluvius en autoriseer datadeling</li><li>Voeg sub-meters toe aan uw grootste verbruikers en kritische processen</li><li>Borg dat alle data minstens kwartierlijk wordt gelogd</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Goede sturing begint bij goede meting. Zonder granulaire data kunt u niet optimaliseren — en zonder digitale meter geen toegang tot dynamische tarieven.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/digitale-meter" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — digitale meter</span></a><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — Atrias platform</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/digitale-meter" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — digitale meter</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — data-ontsluiting</span></a><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — Atrias platform</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Fluvius klantenservice</strong> — voor activatie van de digitale meter en datadeling via het Atrias-platform</li><li><strong>Erkend installatietechnicus</strong> — voor plaatsing van sub-meters bij uw grootste verbruikers</li><li><strong>IT-afdeling / OT-integrator</strong> — voor veilige koppeling van meetdata aan uw interne systemen</li></ul>
       </div>
     </div>
   </div>
@@ -1976,6 +2092,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Ruwe data zonder analyse is ballast. Goede analyse legt verbeterpunten bloot die met het blote oog onzichtbaar zijn.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Agoria — digitale energietools</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>EMS-leverancier</strong> — voor selectie en implementatie van een platform dat past bij uw schaal en sector</li><li><strong>Agoria digitale werkgroep</strong> — voor een overzicht van gecertificeerde EMS-aanbieders in België</li><li><strong>Onafhankelijk energieconsultant</strong> — voor een objectieve selectieprocedure en lastenhoofdstuk</li></ul>
       </div>
     </div>
   </div>
@@ -2000,6 +2118,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een EMS is de operationele rugwervel van een moderne energiestrategie. Het verschil tussen reactief beheer en proactieve sturing.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Agoria — EMS leveranciers</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>EMS-leverancier</strong> — voor configuratie van sturingsregels op basis van prijssignalen en netlimietenv</li><li><strong>Erkend installateur</strong> — voor de hardwareintegratie van uw assets (warmtepomp, koeling, laadpalen) met het EMS</li><li><strong>Process engineer / productiemanager</strong> — voor validatie dat de ingestelde grenzen operationeel werkbaar zijn</li></ul>
       </div>
     </div>
   </div>
@@ -2023,7 +2143,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Bouw rolspecifieke dashboards: directie, finance, operations, facility</li><li>Toon zowel realtime data als trends en doelstellingen</li><li>Plan maandelijkse review-momenten waar het dashboard vertrekpunt is</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Wat zichtbaar is, wordt gemanaged. Een goed dashboard maakt energie tot een gemeenschappelijke verantwoordelijkheid.</p>
-        
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — KPI's en benchmarks energiemanagement</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>EMS-leverancier</strong> — voor rolspecifieke dashboards en automatische rapportages naar management</li><li><strong>CFO / financieel directeur</strong> — voor integratie van energiedata in investeringsbeslissingen en budgetplanning</li><li><strong>Externe energiecoach (VEKA)</strong> — voor begeleiding bij het opzetten van KPI's en reviewprocessen</li></ul>
       </div>
     </div>
   </div>
@@ -2048,6 +2170,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Slimme energiesystemen zijn een aantrekkelijk doelwit. Cyberveiligheid is niet optioneel — onder NIS2 ook wettelijk verplicht voor veel bedrijven.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://ccb.belgium.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>NIS2 richtlijn (CCB)</span></a><a href="https://www.enisa.europa.eu" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>ENISA — cybersecurity for energy</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>CCB Cyber Coach</strong> — gratis cyberveiligheidsbegeleiding voor Belgische bedrijven via het Centre for Cybersecurity Belgium</li><li><strong>NIS2-adviseur of IT-veiligheidsbedrijf</strong> — voor een OT/IT-risicoanalyse en implementatieplan conform NIS2</li><li><strong>Synergrid</strong> — voor sectorspecifieke cyberveiligheidsrichtlijnen voor energiebeheerinfrastructuur</li></ul>
       </div>
     </div>
   </div>
@@ -2088,7 +2212,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Abonneer u op nieuwsbrieven van VEKA, VLAIO, FEBEG en Elia</li><li>Volg sectorfederaties (Voka, Agoria, Essenscia) voor sectorspecifieke updates</li><li>Plan een kwartaalbriefing met uw juridisch en finance-team</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>De energiewetgeving evolueert snel: CSRD, CBAM, Fit-for-55, NIS2. Wie achterloopt, mist subsidies én loopt risico's.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — beleidsupdates</span></a><a href="https://www.consilium.europa.eu/en/policies/fit-for-55/" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Klimaatplan EU Fit-for-55</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — beleidsupdates</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — beleidsevaluaties energie &amp; klimaat</span></a><a href="https://www.consilium.europa.eu/en/policies/fit-for-55/" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Klimaatplan EU Fit-for-55</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Sectorvereniging (Voka, Agoria, Essenscia)</strong> — voor sectorspecifieke interpretatie van nieuwe regelgeving en impact op uw bedrijf</li><li><strong>VEKA beleidsmedewerker</strong> — voor toelichting bij nieuwe Vlaamse energieregelgeving</li><li><strong>Energieadvocaat</strong> — voor juridische duiding van complexe wetgeving (CSRD, CBAM, Fit-for-55)</li></ul>
       </div>
     </div>
   </div>
@@ -2113,6 +2239,8 @@ weeg de opties strategisch af.</h3>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Subsidies zijn vaak beperkt in tijd en budget. Wie als eerste indient, heeft een betere kans. Veel bedrijven laten geld liggen omdat ze de calls niet volgen.</p>
         <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.vlaio.be/nl/subsidies-financiering" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO subsidiedatabank</span></a><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA — premies en subsidies</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>VLAIO innovatieadviseur</strong> — gratis begeleiding bij het identificeren en aanvragen van de juiste subsidies</li><li><strong>VEKA subsidiecoach</strong> — voor Vlaamse energie- en klimaatpremies specifiek voor bedrijven</li><li><strong>Gespecialiseerd subsidieadviesbureau</strong> — voor complexe Europese fondsen (Innovation Fund, LIFE) en grote STRES-dossiers</li></ul>
       </div>
     </div>
   </div>
@@ -2136,7 +2264,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Check uw verplichtingen onder Energiebeleidsovereenkomst (EBO 4.0)</li><li>Bereid CSRD-rapportering voor (verplicht voor groot deel KMO's vanaf 2026)</li><li>Plan periodieke energie-audits en EBO-evaluaties</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Compliance is geen optioneel extraatje meer. Niet voldoen leidt tot boetes, reputatieschade en uitsluiting van publieke aanbestedingen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EBO 4.0 — convenantbedrijven</span></a><a href="https://www.efrag.org" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EFRAG — CSRD standaarden</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EBO 4.0 — convenantbedrijven</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — compliance referentiekader</span></a><a href="https://www.efrag.org" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EFRAG — CSRD standaarden</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>Erkend energieauditeur (EBO 4.0)</strong> — voor verplichte energie-audits en convenantopvolging</li><li><strong>CSRD-adviseur of externe accountant</strong> — voor duurzaamheidsrapportering conform ESRS-standaarden</li><li><strong>VEKA convenantbegeleider</strong> — voor bedrijven onder de Energiebeleidsovereenkomst 4.0</li></ul>
       </div>
     </div>
   </div>
@@ -2160,7 +2290,9 @@ weeg de opties strategisch af.</h3>
         <ul><li>Volg consultaties van VREG, CREG en EU-commissie voor signalen vooraf</li><li>Bouw scenario's waarin u rekent met een verdubbelde CO₂-prijs</li><li>Test pilots met opkomende technologieën (waterstof, CCS, V2G)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>De energietransitie versnelt. Bedrijven die vandaag investeren in pilots, zijn morgen klaar voor schaal — en hebben een duurzaam concurrentievoordeel.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energyville.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EnergyVille — onderzoek en pilots</span></a><a href="https://www.vlaio.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO — innovatiesteun</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energyville.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EnergyVille — onderzoek en pilots</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — toekomstige netwerkevoluties</span></a><a href="https://www.vlaio.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VLAIO — innovatiesteun</span></a></div>
+        <h6 class="detail-h">Wie kan je helpen</h6>
+        <ul><li><strong>EnergyVille / VITO</strong> — voor wetenschappelijk onderbouwde scenario's over de energietransitie in Vlaanderen en België</li><li><strong>VREG / CREG consultaties</strong> — voor inzage in aankomende regelgevingswijzigingen via openbare raadplegingen</li><li><strong>VLAIO innovatieadviseur</strong> — voor steun bij pilots met opkomende technologieën (waterstof, V2G, CCS)</li></ul>
       </div>
     </div>
   </div>
@@ -2996,6 +3128,111 @@ function resetDiagnose() {
   updateProgress();
   document.querySelector('.container-xl.py-4').scrollIntoView({behavior:'smooth'});
 }
+
+/* ===== SEARCH ===== */
+let _searchIndex = null;
+
+const pillarMeta = {
+  p1: { label: 'Energiebehoefte & Groei',   color: '#1e3a5f' },
+  p2: { label: 'Netcapaciteit',              color: '#3a7d1e' },
+  p3: { label: 'Tijd & Flexibiliteit',       color: '#e07b39' },
+  p4: { label: 'Flexmarkten',               color: '#7c5cbf' },
+  p5: { label: 'Data & Regie',              color: '#3b9e8e' },
+  diagnose: { label: 'Diagnose Tool',        color: '#1e3a5f' }
+};
+
+function buildSearchIndex() {
+  const items = [];
+  ['p1','p2','p3','p4','p5'].forEach(pid => {
+    const page = document.getElementById('page-' + pid);
+    if (!page) return;
+    page.querySelectorAll('.step-card').forEach(card => {
+      const title   = card.querySelector('.step-body h6')?.textContent?.trim() || '';
+      const summary = card.querySelector('.step-summary')?.textContent?.trim() || '';
+      const detail  = card.querySelector('.step-expand-inner')?.textContent?.trim() || '';
+      const color   = card.style.getPropertyValue('--card-color') || pillarMeta[pid].color;
+      const iconEl  = card.querySelector('.step-icon i');
+      const icon    = iconEl ? [...iconEl.classList].find(c => c.startsWith('bi-')) || 'bi-lightning' : 'bi-lightning';
+      if (title) items.push({ pid, title, summary, detail, color, icon });
+    });
+    page.querySelectorAll('.action-header').forEach(ah => {
+      const eyebrow = ah.querySelector('.ah-eyebrow')?.textContent?.trim() || '';
+      const sub     = ah.querySelector('.ah-subtitle')?.textContent?.trim() || '';
+      if (eyebrow) items.push({ pid, title: eyebrow, summary: sub, detail: '', color: pillarMeta[pid].color, icon: 'bi-lightning-charge' });
+    });
+  });
+  document.querySelectorAll('.diagnose-item').forEach(item => {
+    const title = item.querySelector('.diagnose-row-info h6')?.textContent?.trim() || '';
+    const desc  = item.querySelector('.diagnose-row-info p')?.textContent?.trim() || '';
+    if (title) items.push({ pid: 'diagnose', title, summary: desc, detail: '', color: '#1e3a5f', icon: 'bi-clipboard-check' });
+  });
+  return items;
+}
+
+function doSearch(q) {
+  const results = document.getElementById('search-results');
+  if (!q.trim()) {
+    results.innerHTML = '<div class="search-hint"><i class="bi bi-search"></i>Typ een trefwoord — bijv. "batterij", "EMS", "subsidie", "Fluvius"</div>';
+    return;
+  }
+  if (!_searchIndex) _searchIndex = buildSearchIndex();
+  const lq = q.toLowerCase();
+  const hits = _searchIndex.filter(it =>
+    it.title.toLowerCase().includes(lq) ||
+    it.summary.toLowerCase().includes(lq) ||
+    it.detail.toLowerCase().includes(lq) ||
+    pillarMeta[it.pid]?.label.toLowerCase().includes(lq)
+  ).slice(0, 10);
+
+  if (!hits.length) {
+    results.innerHTML = `<div class="search-empty"><i class="bi bi-search"></i>Geen resultaten voor "<strong>${q}</strong>"<br><span style="font-size:.8rem">Probeer een ander trefwoord</span></div>`;
+    return;
+  }
+  const countBar = `<div class="search-count">${hits.length} resultaat${hits.length > 1 ? 'en' : ''}</div>`;
+  const rows = hits.map(it => {
+    const pillar = pillarMeta[it.pid] || { label: it.pid, color: '#1e3a5f' };
+    const snippet = it.summary ? it.summary.substring(0, 110) + (it.summary.length > 110 ? '…' : '') : '';
+    return `<div class="search-result-item" onclick="gotoSearchResult('${it.pid}')">
+      <div class="search-result-icon" style="background:${it.color}"><i class="bi ${it.icon}"></i></div>
+      <div style="flex:1;min-width:0">
+        <div class="search-result-title">${it.title}</div>
+        ${snippet ? `<div class="search-result-sub">${snippet}</div>` : ''}
+        <span class="search-result-tag" style="background:${pillar.color}">${pillar.label}</span>
+      </div>
+    </div>`;
+  }).join('');
+  results.innerHTML = countBar + rows;
+}
+
+function gotoSearchResult(pid) {
+  closeSearch();
+  showPage(pid);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSearch() {
+  const ov = document.getElementById('search-overlay');
+  const isOpen = ov.classList.toggle('open');
+  if (isOpen) {
+    const inp = document.getElementById('search-input');
+    inp.value = '';
+    document.getElementById('search-results').innerHTML = '<div class="search-hint"><i class="bi bi-search"></i>Typ een trefwoord — bijv. "batterij", "EMS", "subsidie", "Fluvius"</div>';
+    setTimeout(() => inp.focus(), 50);
+  }
+}
+
+function closeSearch() {
+  document.getElementById('search-overlay').classList.remove('open');
+}
+
+function handleSearchOverlayClick(e) {
+  if (!document.getElementById('search-box').contains(e.target)) closeSearch();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSearch();
+  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); toggleSearch(); }
+});
 </script>
 </body>
 </html>
