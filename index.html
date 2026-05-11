@@ -301,9 +301,11 @@
   .step-expand h6.detail-h {
     font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em;
     color: var(--card-color, #555); font-weight: 700;
-    margin: 0.5rem 0 0.3rem;
+    margin: 1rem 0 0.3rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid #f0f0f0;
   }
-  .step-expand h6.detail-h:first-child { margin-top: 0; }
+  .step-expand h6.detail-h:first-child { margin-top: 0; padding-top: 0; border-top: none; }
   .step-expand p, .step-expand li {
     font-size: 0.78rem; color: #374151; line-height: 1.55; margin: 0 0 0.4rem;
   }
@@ -326,6 +328,10 @@
   .step-refs a:hover { text-decoration: underline; }
   .step-refs a i { font-size: 0.7rem; opacity: 0.7; flex-shrink: 0; }
 
+  /* LINKS IN WIE KAN JE HELPEN */
+  .step-expand-inner ul li a { color: inherit; text-decoration: none; }
+  .step-expand-inner ul li a:hover { text-decoration: underline; opacity: 0.75; }
+
   /* VOORDELEN BOX */
   .voordelen-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 1.2rem 1.5rem; }
   .voordelen-box .label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted-custom); margin-bottom: 0.8rem; }
@@ -335,6 +341,26 @@
   .action-title { font-size: 2rem; font-weight: 800; color: var(--primary); }
   .action-subtitle { color: var(--card-color, var(--green)); font-style: italic; font-size: 0.95rem; }
   .action-tag { display: inline-block; background: rgba(0,0,0,0.06); border-radius: 50px; padding: 5px 14px; font-size: 0.8rem; font-weight: 500; color: var(--card-color, var(--primary)); margin-bottom: 1.5rem; }
+
+  /* CONGESTIEKAART */
+  .congestie-map-section { border: 1px solid #c8dbb2; border-radius: 12px; overflow: hidden; margin-bottom: 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .congestie-map-toggle { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 1.5rem; background: linear-gradient(135deg, #2d5a3d, #3a7d1e); color: #fff; cursor: pointer; border: none; width: 100%; text-align: left; font-weight: 700; font-size: 0.97rem; font-family: 'Manrope', sans-serif; gap: 1rem; }
+  .congestie-map-toggle:hover { background: linear-gradient(135deg, #24492f, #2f6518); }
+  .congestie-map-toggle .ctog-icon { flex-shrink: 0; transition: transform 0.3s; font-size: 1rem; }
+  .congestie-map-toggle[aria-expanded="true"] .ctog-icon { transform: rotate(180deg); }
+  .congestie-map-body { padding: 1.5rem; background: #f8faf5; }
+  .congestie-legend { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; margin-bottom: 1rem; }
+  .cleg-item { display: flex; align-items: center; gap: 7px; font-size: 0.82rem; color: #374151; }
+  .cleg-dot { width: 16px; height: 16px; border-radius: 4px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.15); }
+  .congestie-map-frame-wrap { position: relative; width: 100%; border-radius: 8px; overflow: hidden; background: #e8ede4; border: 1px solid #d1dcc8; }
+  .congestie-map-frame { width: 100%; height: 520px; border: none; display: block; }
+  .congestie-map-sources { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.75rem; }
+  .cmap-src-btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.45rem 0.9rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 2px solid; transition: all 0.18s; }
+  .cmap-src-btn-primary { background: #3a7d1e; color: #fff; border-color: #3a7d1e; }
+  .cmap-src-btn-primary:hover { background: #2f6518; border-color: #2f6518; color: #fff; }
+  .cmap-src-btn-outline { background: transparent; color: #3a7d1e; border-color: #3a7d1e; }
+  .cmap-src-btn-outline:hover { background: #3a7d1e; color: #fff; }
+  .congestie-disclaimer { font-size: 0.78rem; color: #5a6a47; margin-top: 0.8rem; padding: 0.6rem 1rem; background: #fff8e7; border-left: 3px solid #e07b39; border-radius: 0 4px 4px 0; }
 
   /* ACTION HEADER with side visual */
   .action-header {
@@ -913,9 +939,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Verzamel uw verbruiksdata (15-min waarden) van het laatste jaar via Mijn Fluvius of uw leverancier</li><li>Maak een heatmap van uw verbruik per uur en per maand</li><li>Identificeer uw top-5 grootste verbruikers (machines, koeling, verwarming)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Zonder zicht op uw huidig verbruik kunt u geen toekomst plannen. Een goede analyse legt direct ook quick wins bloot in energie-efficiëntie.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://mijn.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Mijn Fluvius — verbruiksdata</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — capaciteitsplanning</span></a><a href="https://www.energiesparen.be/bedrijven/energiescan" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA energiescan voor bedrijven</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
-        <ul><li><strong>Erkend energieauditeur</strong> — via VEKA erkende auditeurs voor professionele verbruiksanalyse</li><li><strong>Fluvius klantenservice</strong> — voor toegang tot uw kwartierverbruiksdata via het digitale platform</li><li><strong>VEKA energieconsulent</strong> — gratis adviesgesprek voor Vlaamse bedrijven via energiesparen.be</li></ul>
+        <ul><li><a href="https://www.energiesparen.be/bedrijven/energieaudit" target="_blank" rel="noopener"><strong>Erkend energieauditeur (VEKA)</strong></a> — professionele verbruiksanalyse via het VEKA-auditeurregister</li><li><a href="https://mijn.fluvius.be" target="_blank" rel="noopener"><strong>Mijn Fluvius</strong></a> — kwartierverbruiksdata en uw aansluitingsprofiel online raadplegen</li><li><a href="https://www.energiesparen.be/bedrijven" target="_blank" rel="noopener"><strong>VEKA energieconsulent</strong></a> — gratis adviesgesprek voor Vlaamse bedrijven via energiesparen.be</li></ul>
       </div>
     </div>
   </div>
@@ -939,9 +964,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Inventariseer geplande elektrificatie: warmtepompen, e-boilers, IR-droging, EV-laadinfra</li><li>Schat per project de extra vermogensvraag (kW) en jaarverbruik (kWh) in</li><li>Map elke trigger op een tijdlijn — kwartaal en jaar van ingebruikname</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Elektrificatie verloopt sneller dan veel bedrijven inschatten. Door triggers vroeg op de tijdlijn te zetten, vermijdt u dat investeringen botsen met aansluitcapaciteit.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.energiesparen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Routekaart elektrificatie industrie (VEKA)</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — groene energie &amp; WKK</span></a><a href="https://klimaat.vlaanderen.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Klimaatplan Vlaanderen 2030</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
-        <ul><li><strong>Erkend energieauditeur</strong> — voor een professionele inschatting van de energie-impact per elektrificatieproject</li><li><strong>Technisch adviseur sectorfederatie</strong> — Agoria, Essenscia of Voka bieden sectorspecifieke elektrificatiegidsen</li><li><strong>VEKA energie-expert</strong> — via energiesparen.be voor trajectbegeleiding elektrificatie KMO's</li></ul>
+        <ul><li><a href="https://www.energiesparen.be/bedrijven/energieaudit" target="_blank" rel="noopener"><strong>Erkend energieauditeur (VEKA)</strong></a> — professionele inschatting van de energie-impact per elektrificatieproject</li><li><a href="https://www.agoria.be" target="_blank" rel="noopener"><strong>Agoria</strong></a> / <a href="https://www.essenscia.be" target="_blank" rel="noopener"><strong>Essenscia</strong></a> / <a href="https://www.voka.be" target="_blank" rel="noopener"><strong>Voka</strong></a> — sectorspecifieke elektrificatiegidsen en technisch advies</li><li><a href="https://www.energiesparen.be/bedrijven" target="_blank" rel="noopener"><strong>VEKA energie-expert</strong></a> — trajectbegeleiding elektrificatie voor KMO's via energiesparen.be</li></ul>
       </div>
     </div>
   </div>
@@ -965,9 +989,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Bouw drie scenario's met verschillende elektrificatiesnelheid en bedrijfsgroei</li><li>Combineer per scenario uw huidig verbruik met de impact van elke trigger</li><li>Visualiseer de evolutie van vermogen (kW) en jaarverbruik (kWh) op 5, 10 en 15 jaar</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Eén puntvoorspelling is altijd fout. Drie scenario's geven u een realistische bandbreedte en helpen bij de communicatie naar netbeheerder en management.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.agoria.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Scenarioplanning (Agoria handleiding)</span></a><a href="https://www.vlaanderen.be/veka/studies-in-het-kader-van-beleidsdomeinen-energie-en-klimaat/studies-groene-energie-en-wkk" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VEKA studies — toekomstscenario's energie</span></a><a href="https://www.energyville.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>EnergyVille — toekomstscenario's België</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
-        <ul><li><strong>Onafhankelijk energieconsultant</strong> — voor het opstellen en doorrekenen van meerdere groeiscenario's</li><li><strong>EnergyVille / VITO</strong> — wetenschappelijke ondersteuning bij langetermijn-energiescenario's</li><li><strong>Fluvius projectbegeleider</strong> — vroegtijdig overleg over scenario's voor de netplanning</li></ul>
+        <ul><li><a href="https://www.bemas.org" target="_blank" rel="noopener"><strong>BEMAS</strong></a> — Belgische beroepsvereniging voor energiemanagers, met ledennetwerk van onafhankelijke consultants</li><li><a href="https://www.energyville.be" target="_blank" rel="noopener"><strong>EnergyVille / VITO</strong></a> — wetenschappelijke ondersteuning bij langetermijn-energiescenario's voor industrie</li><li><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><strong>Fluvius EnergieGRIP</strong></a> — vroegtijdig overleg over scenario's en netplanning met de netbeheerder</li></ul>
       </div>
     </div>
   </div>
@@ -991,9 +1014,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Bepaal per scenario de gelijktijdige maximale vermogensvraag (gelijktijdigheidsfactor)</li><li>Houd rekening met seizoenseffecten en uitzonderlijke piekomstandigheden</li><li>Vergelijk de prognose met uw contractueel beschikbaar vermogen (kVA)</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Piekvermogen bepaalt uw aansluitingskosten en bepaalt of een verzwaring nodig is. Vroeg inzicht hierin maakt het verschil tussen wel en niet aansluiten.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.synergrid.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Synergrid — aansluitvoorwaarden</span></a><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — capaciteitstarief</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — piekvermogen inzicht</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
-        <ul><li><strong>Erkend elektrotechnisch ingenieur</strong> — voor een nauwkeurige piekberekening inclusief gelijktijdigheidsfactor</li><li><strong>Fluvius Energiegrip</strong> — gratis tool voor inzicht in capaciteit en verbruik op uw aansluiting</li><li><strong>Uw erkend installateur</strong> — kan helpen bij opmeting van uw bestaande installaties</li></ul>
+        <ul><li><a href="https://www.kviv.be" target="_blank" rel="noopener"><strong>KVIV</strong></a> — Koninklijke Vlaamse Ingenieursvereniging, voor erkende elektrotechnische ingenieurs voor piekberekeningen</li><li><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><strong>Fluvius EnergieGRIP</strong></a> — inzicht in uw capaciteit en verbruiksprofiel op uw aansluiting</li><li><a href="https://www.nelectra.be" target="_blank" rel="noopener"><strong>NELECTRA</strong></a> — beroepsvereniging van erkende elektro-installateurs in Vlaanderen</li></ul>
       </div>
     </div>
   </div>
@@ -1017,9 +1039,8 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Maak een eenvoudige energie-roadmap onderdeel van uw strategisch plan</li><li>Wijs een interne energie-verantwoordelijke aan met mandaat</li><li>Plan een kwartaalreview waar finance, operations en facility samen evalueren</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Energie is een C-level onderwerp geworden. Wie het laat bij facility, mist strategische kansen rond financiering, subsidies en investeringsbeslissingen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.iso.org/iso-50001-energy-management.html" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>ISO 50001 — Energiemanagementsysteem</span></a><a href="https://www.voka.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Voka — energietransitie voor bedrijven</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
-        <ul><li><strong>Energiecoach VEKA / VLAIO</strong> — begeleiding bij het opstellen van een energie-roadmap voor uw bedrijf</li><li><strong>Voka energie-expert</strong> — strategisch advies en netwerking rond energietransitie in Vlaanderen</li><li><strong>Erkend energiedeskundige</strong> — voor validatie en onderbouwing van uw plan richting management en financiers</li></ul>
+        <ul><li><a href="https://www.vlaio.be/nl/begeleiding-advies/energiebegeleiding" target="_blank" rel="noopener"><strong>Energiecoach VLAIO</strong></a> — begeleiding bij het opstellen van een energie-roadmap, gratis voor Vlaamse kmo's</li><li><a href="https://www.voka.be/energie" target="_blank" rel="noopener"><strong>Voka energie-expert</strong></a> — strategisch advies en netwerking rond energietransitie in Vlaanderen</li><li><a href="https://www.energiesparen.be/bedrijven/energieaudit" target="_blank" rel="noopener"><strong>Erkend energiedeskundige (VEKA)</strong></a> — validatie en onderbouwing van uw plan richting management en financiers</li></ul>
       </div>
     </div>
   </div>
@@ -1181,6 +1202,41 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
       <p>Door de exponentiële elektrificatie botsen netbeheerders steeds vaker op de fysieke limieten van het stroomnet. Een klassieke, 100% permanente netaansluiting voor hoge vermogens is niet langer de standaard. Wie vandaag wil groeien, moet proactief schakelen. Dien een waterdicht, onderbouwd dossier in bij uw netbeheerder. Is het net lokaal verzadigd? Dan tonen wij u hoe u via flexibele contracten (zoals Fall-Back Flex) en slimme sturing tóch de nodige capaciteit verkrijgt om uw operaties ongestoord te garanderen.</p>
     </div>
 
+    <!-- Uitklapbare Congestiekaart -->
+    <div class="congestie-map-section">
+      <button class="congestie-map-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#congestiekaart-collapse" aria-expanded="false" aria-controls="congestiekaart-collapse">
+        <span><i class="bi bi-map-fill me-2"></i>Congestiekaart Vlaanderen — aansluitingsmogelijkheden per stroomgebied (2035)</span>
+        <i class="bi bi-chevron-down ctog-icon"></i>
+      </button>
+      <div class="collapse" id="congestiekaart-collapse">
+        <div class="congestie-map-body">
+          <p class="text-muted small mb-3">De kaart toont per <strong>stroomgebied</strong> (gevoed door een specifiek transformatorstation) welke aansluitingsmogelijkheden er zijn voor <strong>hoge en zeer hoge vermogens</strong>, op basis van de verwachte netcongestie in 2035. Raadpleeg de kaart als eerste oriëntatie vóór u een aanvraagdossier opstelt.</p>
+          <div class="congestie-legend mb-3">
+            <div class="cleg-item"><div class="cleg-dot" style="background:#e07b39"></div><strong>Oranje</strong>&nbsp;— Beperkte aansluitingsmogelijkheden, congestie verwacht</div>
+            <div class="cleg-item"><div class="cleg-dot" style="background:#c8d46e"></div><strong>Geelgroen</strong>&nbsp;— Mogelijkheden via flexibele aansluiting (Fall-Back Flex)</div>
+            <div class="cleg-item"><div class="cleg-dot" style="background:#6abf4b"></div><strong>Groen</strong>&nbsp;— Goede aansluitingsmogelijkheden beschikbaar</div>
+          </div>
+          <div class="congestie-map-frame-wrap">
+            <iframe class="congestie-map-frame" src="https://opendata.fluvius.be/pages/map_perceel/?location=8,51.05,4.3" title="Congestiekaart Vlaanderen — Fluvius Open Data" loading="lazy" allowfullscreen></iframe>
+          </div>
+          <div class="congestie-map-sources">
+            <a href="https://opendata.fluvius.be/pages/map_perceel/" target="_blank" rel="noopener" class="cmap-src-btn cmap-src-btn-primary">
+              <i class="bi bi-box-arrow-up-right"></i> Volledig scherm openen
+            </a>
+            <a href="https://www.elia.be/en/customers/connection/grid-hosting-capacity" target="_blank" rel="noopener" class="cmap-src-btn cmap-src-btn-outline">
+              <i class="bi bi-lightning-charge"></i> Grid Hosting Capacity Elia (hoogspanning)
+            </a>
+            <a href="https://opendata.fluvius.be/pages/map_perceel/" target="_blank" rel="noopener" class="cmap-src-btn cmap-src-btn-outline">
+              <i class="bi bi-bar-chart"></i> Cijfers &amp; kaarten Fluvius
+            </a>
+          </div>
+          <div class="congestie-disclaimer mt-2">
+            <i class="bi bi-info-circle-fill me-1"></i><strong>Indicatief &amp; niet bindend:</strong> De kaart toont de verwachte situatie in 2035 en geldt als oriëntatie voor uw dossiervoorbereiding. Voor een specifiek project kan een oplossing op maat mogelijk zijn. Raadpleeg steeds Fluvius of Elia voor uw concrete situatie.
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row g-3 mb-5">
       <div class="col-md-4">
         <div class="insight-card">
@@ -1241,7 +1297,7 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Vertaal uw scenario's uit Pijler 1 naar concrete kVA-behoeften per jaar</li><li>Voeg veiligheidsmarges toe voor onverwachte opportuniteiten</li><li>Documenteer hoe u tot deze cijfers gekomen bent</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een onderbouwde vraag wordt sneller én correcter behandeld. Vage aanvragen zorgen voor heen-en-weer, met vertraging als gevolg.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — vermogensaanvraag bedrijven</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — vermogensinzicht</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/aansluitingen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — aansluitingen bedrijven (&lt;25 MW)</span></a><a href="https://www.elia.be/nl/users-of-the-grid/connect-to-the-grid" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — aansluiting op het hoogspanningsnet (&gt;25 MW)</span></a><a href="https://opendata.fluvius.be/pages/map_perceel/" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Capaciteitswijzer — kaarten per stroomgebied</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — vermogensinzicht en planning</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Fluvius aansluiting &amp; toegang</strong> — rechtstreeks loket voor vermogensaanvragen en technische vragen</li><li><strong>Erkend elektrotechnisch ingenieur</strong> — voor correcte kVA-berekening en opmeting van uw installatie</li><li><strong>Uw erkend installateur</strong> — voor de vertaling van uw behoeften naar een technisch aansluitplan</li></ul>
       </div>
@@ -1267,7 +1323,7 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Stel een dossier op met uw bedrijfscontext, scenario's en tijdlijn</li><li>Voeg uw geplande investeringen en hun energie-impact toe</li><li>Maak duidelijk welke flexibiliteit u kunt aanbieden</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Netbeheerders waarderen onderbouwde aanvragen. Een goed dossier verhoogt de kans op een sneller én flexibeler antwoord.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — sectorale aanpak</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — sectorale aanpak en dossierondersteuning</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/actieplan" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius &amp; Elia actieplan netcongestie (maart 2025)</span></a><a href="https://www.fluvius.be/nl/aansluitingen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — aansluitingsprocedure bedrijven (&lt;25 MW)</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Onafhankelijk energieconsultant</strong> — voor het opstellen van een professioneel aanvraagdossier met scenario's en fasering</li><li><strong>Erkend installateur of ingenieur</strong> — voor technische onderbouwing van uw flexibiliteitsaanbod</li><li><strong>Fluvius EnergieGRIP-team</strong> — voor sectorale begeleiding bij complexe aanvragen</li></ul>
       </div>
@@ -1293,7 +1349,7 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Vraag een ontmoeting aan met de netbeheerder via uw account manager of KMO-loket</li><li>Bespreek niet enkel uw vraag, maar ook de netuitdagingen in uw regio</li><li>Verken samen flexibele oplossingen die voor beide partijen werken</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een goed gesprek maakt vaak meer mogelijk dan een formulier. Netbeheerders zoeken zelf actief naar pragmatische oplossingen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/onderneming" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — contact bedrijven</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — wat is netcongestie?</span></a><a href="https://www.elia.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — klantenrelaties</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — proactief overleg met de netbeheerder</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — wat is netcongestie in Vlaanderen?</span></a><a href="https://www.elia.be/nl/users-of-the-grid/connect-to-the-grid" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — aansluiting hoogspanningsnet (&gt;25 MW)</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/veelgestelde-vragen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — veelgestelde vragen over netcongestie</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Fluvius accountmanager bedrijven</strong> — uw vaste aanspreekpunt voor proactief overleg over netcapaciteit</li><li><strong>Elia klantenteam</strong> — voor bedrijven op het hoogspanningsnet (&gt;70kV)</li><li><strong>Sectorverenigingen (Voka, Agoria)</strong> — voor lobbywerk en collectieve aanpak in congestiezones</li></ul>
       </div>
@@ -1319,7 +1375,7 @@ html[data-theme="dark"] .context-card{background:rgba(18,24,28,.74); border-colo
         <ul><li>Plan kwartaalupdates met uw netbeheerder over de status van uw dossier</li><li>Communiceer wijzigingen in uw plannen meteen</li><li>Hou interne stakeholders op de hoogte van milestones</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Aanvragen die maandenlang blijven liggen verliezen prioriteit. Actieve opvolging hou ze hoog op de agenda van iedereen.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — opvolgingstool</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — opvolging en proactief overleg</span></a><a href="https://opendata.fluvius.be/pages/map_perceel/" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius cijfers &amp; kaarten — maandelijkse update per stroomgebied</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Fluvius projectbegeleider</strong> — voor statusopvolging van uw aanvraag en mijlpaalcommunicatie</li><li><strong>Intern energy manager</strong> — voor coördinatie tussen operations, finance en de netbeheerder</li><li><strong>Onafhankelijk energieconsultant</strong> — als bemiddelaar bij complexe of lang slepende dossiers</li></ul>
       </div>
@@ -1364,7 +1420,7 @@ weeg de opties strategisch af.</h3>
         <ul><li>Vraag het netinformatiedocument op bij Fluvius of Elia</li><li>Check de status van het lokale net: capaciteit, congestiekans, geplande versterkingen</li><li>Documenteer uw huidige aansluitingscontract: vermogen, type, looptijd</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Niet elke regio heeft dezelfde mogelijkheden. Wat in Limburg vlot kan, kan in de Antwerpse haven jaren wachten.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://opendata.fluvius.be/pages/map_perceel/" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius capaciteitskaart</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — wat is netcongestie in Vlaanderen?</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — netbelasting live</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://opendata.fluvius.be/pages/map_perceel/" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Capaciteitswijzer — kaarten per stroomgebied (laag/middenspanning)</span></a><a href="https://www.elia.be/en/customers/connection/grid-hosting-capacity" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Hosting Capacity — beschikbare capaciteit hoogspanningsnet</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — wat is netcongestie in Vlaanderen?</span></a><a href="https://www.elia.be/nl/grid-data" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia Grid Data — live netbelasting en capaciteitsdata</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Fluvius capaciteitsloket</strong> — voor een officieel netinformatiedocument voor uw aansluiting</li><li><strong>Elia klantenteam</strong> — voor situaties op het transmissienet</li><li><strong>Onafhankelijk netconsultant</strong> — voor interpretatie van de capaciteitskaart en congestierisico's in uw regio</li></ul>
       </div>
@@ -1391,7 +1447,7 @@ weeg de opties strategisch af.</h3>
         <ul><li>Gebruik dit voor processen met strikte continuïteitseisen</li><li>Bereken de jaarlijkse netkost vs. opbrengstpotentieel</li><li>Hou rekening met doorlooptijden van 12 tot 36 maanden voor verzwaring</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>De klassieke route geeft maximale zekerheid maar kost de meeste tijd én geld bij een vermogensuitbreiding.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius Energiegrip — aanvraag vaste capaciteit</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/aansluitingen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — aansluitingen &amp; meters voor bedrijven (&lt;25 MW)</span></a><a href="https://www.elia.be/nl/users-of-the-grid/connect-to-the-grid" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Elia — nieuwe aansluiting op het hoogspanningsnet (&gt;25 MW)</span></a><a href="https://www.fluvius.be/nl/energiegrip" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius EnergieGRIP — aanvraag vaste capaciteit</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Fluvius aansluiting &amp; toegang</strong> — voor de officiële aanvraagprocedure en doorlooptijden</li><li><strong>Erkend installateur</strong> — voor de technische realisatie van de aansluiting en interne installatie</li><li><strong>Juridisch adviseur</strong> — voor beoordeling van de aansluitingsovereenkomst en aansprakelijkheden</li></ul>
       </div>
@@ -1418,7 +1474,7 @@ weeg de opties strategisch af.</h3>
         <ul><li>Onderzoek of een flexibele aansluiting mogelijk is in uw regio</li><li>Beoordeel of uw processen tijdelijke capaciteitsbeperkingen aankunnen</li><li>Onderhandel duidelijke afspraken: aantal beperkingsuren, voorspelbaarheid, vergoeding</li></ul>
         <h6 class="detail-h">Waarvoor het dient</h6>
         <p>Een flexibele aansluiting opent de deur waar de klassieke route gesloten is. Voor veel bedrijven is dat het verschil tussen wel en niet groeien.</p>
-        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — flexibele aansluiting</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — netcongestie en flexoplossingen</span></a><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — netwerktarieven</span></a></div>
+        <div class="step-refs"><div class="refs-label">Referenties & bronnen</div><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/wat-is-netcongestie" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — netcongestie, flexibele aansluiting &amp; Fall-Back Flex</span></a><a href="https://www.fluvius.be/nl/nieuws/netcongestie-in-vlaanderen/actieplan" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius &amp; Elia actieplan — flex-maatregelen en investeringen 2025</span></a><a href="https://www.fluvius.be/nl/aansluitingen" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>Fluvius — aansluitingsprocedure en flex-contracten (&lt;25 MW)</span></a><a href="https://www.vreg.be" target="_blank" rel="noopener"><i class="bi bi-box-arrow-up-right"></i><span>VREG — netwerktarieven en flexvergoeding</span></a></div>
         <h6 class="detail-h">Wie kan je helpen</h6>
         <ul><li><strong>Fluvius EnergieGRIP-team</strong> — voor informatie over flexibele aansluitingscontracten in uw regio</li><li><strong>EMS-leverancier</strong> — voor automatische sturing zodat beperkingen operationeel geen impact hebben</li><li><strong>Erkend installateur</strong> — voor technische aanpassing van uw installatie aan de flex-eisen</li></ul>
       </div>
